@@ -11,7 +11,7 @@ import {Message} from 'element-ui'
 // Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.prototype.$http = axios
-Vue.prototype.$url = 'http://127.0.0.1:8000/Arxiver'
+Vue.prototype.$url = 'http://162.105.16.191:5000'
 Vue.prototype.$message=Message
 
 /* eslint-disable no-new */

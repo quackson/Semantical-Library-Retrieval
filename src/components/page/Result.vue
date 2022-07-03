@@ -21,18 +21,18 @@
               <div class="first-line">
                 <el-row :gutter="24">
                   <el-col :span="6">
-                    项目名称：{{item.name}}
+                    项目名称：{{item.repo_name}}
                   </el-col>              
                   <el-col :span="6">
-                    项目所属：{{item.owner}}
+                    项目所属：{{item.repo_owner}}
                    </el-col>              
                   <el-col :span="12">
-                    项目地址：{{item.link}}
+                    项目地址：{{item.repo_url}}
                   </el-col>   
                 </el-row>
               </div>
               <div class="descip">
-               项目介绍 : {{item.description}}
+               项目介绍 : {{item.repo_des}}
               </div>
               <div class="topicsList">
                 <span class="tag-group__title">Topic :</span>
@@ -59,6 +59,7 @@ export default {
             message:'check',
             imgUrl:require("../../assets/img/logo3.png"),
             Len:20,
+            loading:true,
             labels:[
                 '',
                 'success',
@@ -66,124 +67,16 @@ export default {
                 'danger',
                 'warning'
             ],
-            repos:[
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'homework for deep generation. Combine FastSpeech2 with different vocoders ⭐INFERENCE (modify origin repos): https://github.com/ming024/FastSpeech2 https://github.com/NVIDIA/waveglow https://github.com/mindslab-ai/univnet https://github.com/jik876/hifi-gan',
-                    'link':'https://github.com/quackson/Arxiver',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'a repo that describe the function of ...',
-                    'link':'https://github.com/quackson/frontend',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'a repo that describe the function of ...',
-                    'link':'https://github.com/quackson/frontend',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'a repo that describe the function of ...',
-                    'link':'https://github.com/quackson/frontend',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'a repo that describe the function of ...',
-                    'link':'https://github.com/quackson/frontend',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-                {
-                    'name':'frontend',
-                    'owner':'quazkson',
-                    'description':'a repo that describe the function of ...',
-                    'link':'https://github.com/quackson/frontend',
-                    'topics':[
-                        'frontend',
-                        'vue',
-                        'django',
-                        'describe',
-                        'check',
-                        'forwhat',
-                        'message'
-                    ]
-
-                },
-
-            ]
+            repos:[]
         };
 
     },
     methods: {
         goto (item) {
-           window.open(item.link,'_blank');
+           window.open(item.repo_url,'_blank');
          },
-        searchto(){
-            console.log(this.message);
-            this.$router.push({
-              name: 'result',
-              params: {keyword:this.message}
-              });
-        },
         home(){
             this.$router.push('/search');
-        },
-        submitForm() {
-            
         },
         openHelp(){
             this.$alert('输入查询关键词,如“a library to import baidu map interface”\
@@ -204,7 +97,24 @@ export default {
         },
     },
     created(){
-        this.message=this.$route.query.keyword;
+        console.log(this.$route.params)
+        this.message=this.$route.params.keyword;
+        let this_=this;
+        var result='';
+        //console.log(this.message)
+
+            this.$http.request({
+                      url:this_.$url + '/search?query='+this_.message,
+                      method:'get',
+                    }).then(function(response) {
+                      console.log(response.data.message),
+                      this_.repos = response.data.payload,
+                      result=response.data.success
+                    }).catch(function(error) {
+                      console.log(error)
+                    });
+        
+
     },   
 };
 </script>
